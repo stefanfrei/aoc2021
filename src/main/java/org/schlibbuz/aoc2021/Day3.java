@@ -28,7 +28,9 @@ public final class Day3 extends Day {
 
   int toDec(String[] bin) {
     var sb = new StringBuilder();
-    for (String s : bin) sb.append(s);
+    for (String s : bin) {
+      sb.append(s);
+    }
     return Integer.parseInt(sb.toString(), 2);
   }
 
@@ -41,8 +43,11 @@ public final class Day3 extends Day {
       int ones = 0;
       int zeroes = 0;
       for (String line : data) {
-        if(line.charAt(i) == '0') zeroes++;
-        else ones++;
+        if (line.charAt(i) == '0') {
+          zeroes++;
+        } else {
+          ones++;
+        }
       }
       if (ones > zeroes) {
         gamma[i] = "1";
@@ -58,21 +63,40 @@ public final class Day3 extends Day {
 
   int getGen(List<String> data) {
     List<String> result = new ArrayList<>(data);
-    while(result.size() > 1) {
-      List<String> positives = new ArrayList<>(), negatives = new ArrayList<>();
+    var index = 0;
+    while (result.size() > 1) {
+      List<String> ones = new ArrayList<>(), zeroes = new ArrayList<>();
+      for (String val : result) {
+        if (val.charAt(index) == '1') {
+          ones.add(val);
+        } else {
+          zeroes.add(val);
+        }
+      }
+      index++;
       //compare sizes
-      result = (positives.size() >= negatives.size()) ? positives : negatives;
+      result = (ones.size() >= zeroes.size()) ? ones : zeroes;
     }
-    return Integer.parseInt(result.get(0),2);
+    return Integer.parseInt(result.get(0), 2);
   }
 
   int getScrubber(List<String> data) {
-    var result = new ArrayList<>(data);
-    while(result.size() > 1) {
-
-      result = new ArrayList<>(result);
+    List<String> result = new ArrayList<>(data);
+    var index = 0;
+    while (result.size() > 1) {
+      List<String> ones = new ArrayList<>(), zeroes = new ArrayList<>();
+      for (String val : result) {
+        if (val.charAt(index) == '1') {
+          ones.add(val);
+        } else {
+          zeroes.add(val);
+        }
+      }
+      index++;
+      //compare sizes
+      result = (ones.size() < zeroes.size()) ? ones : zeroes;
     }
-    return Integer.parseInt(result.get(0),2);
+    return Integer.parseInt(result.get(0), 2);
   }
 
   @Override
