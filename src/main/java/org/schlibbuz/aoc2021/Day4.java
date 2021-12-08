@@ -7,6 +7,7 @@ package org.schlibbuz.aoc2021;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Iterator;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -166,19 +167,15 @@ public final class Day4 extends Day {
         cards.forEach(System.out::println);
 
         for (var draw : draws) {
-          System.out.println(draw);
-          List<BingoCard> bingoCards = new ArrayList<>();
-          for (var card : cards) {
+          Iterator<BingoCard> it = cards.iterator();
+          while(it.hasNext()) {
+            var card = it.next();
             var drawResult = card.processDraw(draw);
             if (drawResult > 0) {
-              System.out.println(card);
-              System.out.println("bingo");
-              System.out.println(draw * drawResult);
-              bingoCards.add(card);
+              if (cards.size() == 1) return draw * drawResult;
+              it.remove();
             }
           }
-          cards.removeAll(bingoCards);
-          if (cards.isEmpty()) break;
         }
         return 0;
     }
