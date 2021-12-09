@@ -5,23 +5,10 @@
  */
 package org.schlibbuz.aoc2021;
 
-
 /**
  *
  * @author Stefan Frei <stefan.a.frei@gmail.com>
  */
-public class Runner {
-
-  /**
-   * @param args the command line arguments
-   */
-  public static void main(String[] args) {
-    System.out.println(
-        new Day5(
-            RUN_TYPE.PROD
-        )
-            .part2()
-    );
-  }
-
+public enum TEST_TYPE {
+  SHOULD_PASS, SHOULD_FAIL;
 }
