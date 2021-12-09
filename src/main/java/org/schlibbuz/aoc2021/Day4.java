@@ -114,7 +114,7 @@ public final class Day4 extends Day {
 
     }
 
-    public int part1() {
+    public long part1() {
         var draws = Arrays.asList(data.get(0).split(","))
                 .stream()
                 .map(val -> Integer.parseInt(val, 10))
@@ -147,7 +147,7 @@ public final class Day4 extends Day {
         return 0;
     }
 
-    public int part2() {
+    public long part2() {
         var draws = Arrays.asList(data.get(0).split(","))
                 .stream()
                 .map(val -> Integer.parseInt(val, 10))

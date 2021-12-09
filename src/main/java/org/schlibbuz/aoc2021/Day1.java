@@ -27,7 +27,7 @@ public class Day1 extends Day {
   }
 
   @Override
-  public int part1() {
+  public long part1() {
     int prev = 0;
     int counter = 0;
     for (int number : data) {
@@ -40,7 +40,7 @@ public class Day1 extends Day {
   }
 
   @Override
-  public int part2() {
+  public long part2() {
     int prev = 0;
     int counter = 0;
 

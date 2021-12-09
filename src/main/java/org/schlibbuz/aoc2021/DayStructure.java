@@ -11,6 +11,6 @@ package org.schlibbuz.aoc2021;
  * @author Stefan Frei <stefan.a.frei@gmail.com>
  */
 interface DayStructure {
-  int part1();
-  int part2();
+  long part1();
+  long part2();
 }

@@ -35,7 +35,7 @@ public final class Day3 extends Day {
   }
 
   @Override
-  public int part1() {
+  public long part1() {
 
     final int DATA_WIDTH = data.get(0).length();
     String[] gamma = new String[DATA_WIDTH], epsi = new String[DATA_WIDTH];
@@ -100,7 +100,7 @@ public final class Day3 extends Day {
   }
 
   @Override
-  public int part2() {
+  public long part2() {
     return getGen(data) * getScrubber(data);
   }
 }
