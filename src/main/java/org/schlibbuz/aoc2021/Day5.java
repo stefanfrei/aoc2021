@@ -5,10 +5,14 @@
  */
 package org.schlibbuz.aoc2021;
 
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
+import org.schlibbuz.aoc2021.day5.Line;
+import org.schlibbuz.aoc2021.day5.Point;
 
 /**
  *
@@ -27,80 +31,88 @@ public class Day5 extends Day implements FileLoader {
     map = new HashMap<>();
   }
 
-  Map<String, Integer> loadMap(List<Line> lines) {
-    Map<String, Integer> map = new HashMap<>();
+  Map<Point, Integer> loadMap(List<Line> lines) {
+    Map<Point, Integer> map = new HashMap<>();
     for (var line : lines) {
       System.out.println(line);
+      line.getPoints().forEach(System.out::println);
+      line.getPoints().forEach(point -> {
+        if (map.containsKey(point)) {
+          map.put(point, map.get(point) + 1);
+        } else {
+          map.put(point, 1);
+        }
+      });
     }
     return map;
   }
-  
+
+  int countDangerous(Map<Point, Integer> map) {
+    return (int)map.values().stream().filter(val -> val > 1).count();
+  }
+
+
+  Point getDiagramBounds(Map<Point, Integer> map) {
+    int boundsX = 0;
+    int boundsY = 0;
+
+    for (var point : map.keySet()) {
+      if (point.x > boundsX) boundsX = point.x;
+      if (point.y > boundsY) boundsY = point.y;
+    }
+    return new Point(boundsX, boundsY);
+  }
+
+  List<char[]> initDiagram(Point bounds) {
+    List<char[]> diagramTemplate = new ArrayList<>();
+    char[] lineTemplate = new char[bounds.x + 1];
+    for (int i = 0; i < lineTemplate.length; i++) lineTemplate[i] = '.';
+    for (int i = 0; i <= bounds.y; i++) {
+      diagramTemplate.add(lineTemplate.clone());
+    }
+    return diagramTemplate;
+  }
+
+  String mapToDiagram(Map<Point, Integer> map) {
+    //find dimensions
+    Point bounds = getDiagramBounds(map);
+    var diagram = initDiagram(bounds);
+    var sb = new StringBuilder( (bounds.x + 2) * (bounds.y + 1));
+    for (var point : map.keySet()) diagram.get(point.y)[point.x] = String.valueOf(map.get(point)).charAt(0);
+    for (var line : diagram) {
+      sb.append(line).append('\n');
+    }
+    sb.deleteCharAt(sb.length() - 1);
+    return sb.toString();
+  }
+
+  List<Integer> loadCoords(String dataLine) {
+    return Arrays.asList(
+        dataLine.split(" -> |\\,")
+    ).stream().map(item -> Integer.parseInt(item)).collect(Collectors.toUnmodifiableList());
+  }
+
   @Override
   public int part1() {
     var lines = data
         .stream()
-        .map(line -> new Line(line))
-        .filter(line -> line.xS == line.xE || line.yS == line.yE)
+        .map(line -> new Line(loadCoords(line)))
+        .filter(line -> line.pS.x == line.pE.x || line.pS.y == line.pE.y)
         .collect(Collectors.toList());
-    loadMap(lines);
-    return 5;
+
+    return countDangerous(loadMap(lines));
   }
 
   @Override
   public int part2() {
-    throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-  }
-
-  private enum LINE_TYPE {
-    HORIZ, VERT, DIAG_LEFT_DOWN, DIAG_LEFT_UP, DIAG_RIGHT_DOWN, DIAG_RIGHT_UP;
-  }
-  private final class Line {
-
-    final int xS;
-    final int yS;
-    final int xE;
-    final int yE;
-    final LINE_TYPE lineType;
-    
-    Line(String dataLine) {
-      String[] coords = loadCoords(dataLine);
-      xS = Integer.parseInt(coords[0]);
-      yS = Integer.parseInt(coords[1]);
-      xE = Integer.parseInt(coords[2]);
-      yE = Integer.parseInt(coords[3]);
-      lineType = findLineType();
-    }
-
-    Line(int xS, int yS, int xE, int yE) {
-      this.xS = xS;
-      this.yS = yS;
-      this.xE = xE;
-      this.yE = yE;
-      lineType = findLineType();
-    }
-    
-    LINE_TYPE findLineType() {
-      if (xS == xE) return LINE_TYPE.HORIZ;
-      if (yS == yE) return LINE_TYPE.VERT;
-      return null; //should not happen
-    }
-    
-    String[] loadCoords(String dataLine) {
-      return dataLine.split(" -> |\\,");
-    }
-
-    @Override
-    public String toString() {
-      StringBuilder sb = new StringBuilder(64);
-      sb.append("Line{xS=").append(xS);
-      sb.append(", yS=").append(yS);
-      sb.append(", xE=").append(xE);
-      sb.append(", yE=").append(yE);
-      sb.append(", lineType=").append(lineType);
-      sb.append('}');
-      return sb.toString();
-    }
-
+    var lines = data
+        .stream()
+        .map(line -> new Line(loadCoords(line)))
+        .collect(Collectors.toList());
+    var map = loadMap(lines);
+    var diagram = mapToDiagram(map);
+    System.out.println(diagram);
+    return countDangerous(map);
   }
 
 }
