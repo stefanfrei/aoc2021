@@ -19,7 +19,7 @@ public final class Day2 extends Day {
     super(runType);
   }
 
-  public int part1() {
+  public long part1() {
 
     int depth = 0;
     int pos = 0;
@@ -41,7 +41,7 @@ public final class Day2 extends Day {
     return depth * pos;
   }
 
-  public int part2() {
+  public long part2() {
 
     int angle = 0;
     int depth = 0;

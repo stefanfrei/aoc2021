@@ -18,7 +18,7 @@ import org.schlibbuz.aoc2021.day5.Point;
  *
  * @author Stefan Frei <stefan.a.frei@gmail.com>
  */
-public class Day5 extends Day implements FileLoader {
+public class Day5 extends Day {
 
   final Map<String, Integer> map;
 
@@ -93,7 +93,7 @@ public class Day5 extends Day implements FileLoader {
   }
 
   @Override
-  public int part1() {
+  public long part1() {
     var lines = data
         .stream()
         .map(line -> new Line(loadCoords(line)))
@@ -104,7 +104,7 @@ public class Day5 extends Day implements FileLoader {
   }
 
   @Override
-  public int part2() {
+  public long part2() {
     var lines = data
         .stream()
         .map(line -> new Line(loadCoords(line)))

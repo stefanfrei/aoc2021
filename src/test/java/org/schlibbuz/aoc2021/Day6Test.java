@@ -12,17 +12,17 @@ import org.testng.annotations.Test;
  *
  * @author Stefan Frei <stefan.a.frei@gmail.com>
  */
-public class Day5Test {
+public class Day6Test {
 
   @Test
   public void part1Test() {
-    var inst = new Day5(RUN_TYPE.TEST);
-    assertEquals(inst.part1(), 5);
+    var inst = new Day6(RUN_TYPE.TEST);
+    assertEquals(inst.part1(), 5934);
   }
 
   @Test
   public void part2Test() {
-    var inst = new Day5(RUN_TYPE.TEST);
-    assertEquals(inst.part2(), 12);
+    var inst = new Day6(RUN_TYPE.TEST);
+    assertEquals(inst.part2(), 26984457539L);
   }
 }
