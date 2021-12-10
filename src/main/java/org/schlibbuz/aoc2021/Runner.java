@@ -20,7 +20,7 @@ public class Runner {
         new Day8(
             RUN_TYPE.PROD
         )
-            .part1()
+            .part2()
     );
   }
 

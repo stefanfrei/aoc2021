@@ -5,6 +5,7 @@
  */
 package org.schlibbuz.aoc2021;
 
+import java.util.stream.Collectors;
 import org.schlibbuz.aoc2021.day8.SevenSegment;
 
 /**
@@ -34,7 +35,15 @@ public class Day8 extends Day {
 
   @Override
   public long part2() {
-    return 61229;
+    var data = super.data
+        .stream()
+        .map(line -> new SevenSegment(line))
+        .collect(Collectors.toUnmodifiableList());
+    long sum = 0;
+    for (var segment : data) {
+      sum += segment.decode();
+    }
+    return sum;
   }
 
 }
