@@ -23,7 +23,7 @@ public abstract class Day implements FileLoader, DayStructure {
 
 
   Day(RUN_TYPE runType) {
-    var dayNum = this.getClass().getSimpleName().charAt(3);
+    var dayNum = this.getClass().getSimpleName().replace("Day", "");
     file = new File(
         new StringBuilder(DATA_PREFIX.length() + 2)
         .append(DATA_PREFIX)
