@@ -25,37 +25,37 @@ public class ScannerTest {
     return new Object[][] {
       {
         "()()",
-        new ArrayList<String>(Arrays.asList("()", "()")),
+        new ArrayList<>(Arrays.asList("()", "()")),
         TEST_TYPE.SHOULD_PASS
       },
       {
         "(<>[])([{<()>}])",
-        new ArrayList<String>(Arrays.asList("(<>[])", "([{<()>}])")),
+        new ArrayList<>(Arrays.asList("(<>[])", "([{<()>}])")),
         TEST_TYPE.SHOULD_PASS
       },
       {
         "(<>[]){([{<()>}])}",
-        new ArrayList<String>(Arrays.asList("(<>[])", "{([{<()>}])}")),
+        new ArrayList<>(Arrays.asList("(<>[])", "{([{<()>}])}")),
         TEST_TYPE.SHOULD_PASS
       },
       {
         "(<>[]){([{<()>}])",
-        new ArrayList<String>(Arrays.asList("(<>[])", "{([{<()>}])")),
+        new ArrayList<>(Arrays.asList("(<>[])", "{([{<()>}])")),
         TEST_TYPE.SHOULD_PASS
       },
       {
         "(()(()))(()()())",
-        new ArrayList<String>(Arrays.asList("(()(()))", "(()()())")),
+        new ArrayList<>(Arrays.asList("(()(()))", "(()()())")),
         TEST_TYPE.SHOULD_PASS
       },
       {
         "(()(()))(()()())(()(()))(()()())",
-        new ArrayList<String>(Arrays.asList("(()(()))", "(()()())", "(()(()))", "(()()())")),
+        new ArrayList<>(Arrays.asList("(()(()))", "(()()())", "(()(()))", "(()()())")),
         TEST_TYPE.SHOULD_PASS
       },
       {
         "{([(<{}[<>[]}>{[]{[(<()>",
-        new ArrayList<String>(Arrays.asList("{([(<{}[<>[]}", ">{[]{[(<()>")),
+        new ArrayList<>(Arrays.asList("{([(<{}[<>[]}", ">{[]{[(<()>")),
         TEST_TYPE.SHOULD_PASS
       },
     };
@@ -113,11 +113,32 @@ public class ScannerTest {
         TEST_TYPE.SHOULD_PASS
       },
       {
-        "([]>{)",
+        "({}()<>",
         new ArrayList<>(
             Arrays.asList(
-                new ScannerError(ERROR_TYPE.CORRUPTED, 3, '>', ')'),
-                new ScannerError(ERROR_TYPE.CORRUPTED, 5, ')', '}')
+                new ScannerError(ERROR_TYPE.INCOMPLETE, 7, '\u0000', ')')
+            )
+        ),
+        TEST_TYPE.SHOULD_PASS
+      },
+      {
+        "(({}()<>",
+        new ArrayList<>(
+            Arrays.asList(
+                new ScannerError(ERROR_TYPE.INCOMPLETE, 8, '\u0000', ')'),
+                new ScannerError(ERROR_TYPE.INCOMPLETE, 9, '\u0000', ')')
+            )
+        ),
+        TEST_TYPE.SHOULD_PASS
+      },
+      {
+        "{[(({}()<>",
+        new ArrayList<>(
+            Arrays.asList(
+                new ScannerError(ERROR_TYPE.INCOMPLETE, 10, '\u0000', ')'),
+                new ScannerError(ERROR_TYPE.INCOMPLETE, 11, '\u0000', ')'),
+                new ScannerError(ERROR_TYPE.INCOMPLETE, 12, '\u0000', ']'),
+                new ScannerError(ERROR_TYPE.INCOMPLETE, 13, '\u0000', '}')
             )
         ),
         TEST_TYPE.SHOULD_PASS

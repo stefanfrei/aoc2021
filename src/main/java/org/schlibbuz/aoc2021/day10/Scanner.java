@@ -23,12 +23,18 @@ public final class Scanner {
   static final String OPENERS = "([{<";
   static final String CLOSERS = ")]}>";
   static final Pattern CLOSER_PATTERN = Pattern.compile("[\\)|\\]|\\}|>]");
-  public static final Map<Character, Integer> SCORE_MAP = Stream.of(new Object[][] {
+  public static final Map<Character, Integer> PART1_SCORE_MAP = Stream.of(new Object[][] {
      { ')',     3 },
      { ']',    57 },
      { '}',  1197 },
      { '>', 25137 },
- }).collect(Collectors.toUnmodifiableMap(data -> (char) data[0], data -> (Integer) data[1]));
+  }).collect(Collectors.toUnmodifiableMap(data -> (char) data[0], data -> (Integer) data[1]));
+  public static final Map<Character, Integer> PART2_SCORE_MAP = Stream.of(new Object[][] {
+     { ')',     1 },
+     { ']',     2 },
+     { '}',     3 },
+     { '>',     4 },
+  }).collect(Collectors.toUnmodifiableMap(data -> (char) data[0], data -> (Integer) data[1]));
   final String code;
   public final List<String> chunks;
 
@@ -74,22 +80,33 @@ public final class Scanner {
     List<ScannerError> errs = new ArrayList<>();
     var src = String.copyValueOf(chunk.toCharArray());
     int index = 0;
-    while (src.length() > errs.size()) {
+    int corrupted = 0;
+    while (src.length() > corrupted) {
       Matcher m = CLOSER_PATTERN.matcher(src);
       if (!m.find()) {
-        errs.add(new ScannerError(ERROR_TYPE.INCOMPLETE, -1, '\u0000', '\u0000'));
-        return errs;
-      }
-      var findIndex = m.start();
-      var currentCloser = m.group().charAt(0);
-      var expectedCloser = getCorrespondingCloser(src.charAt(findIndex - 1 ));
-      if (currentCloser != expectedCloser) {
+        var closer = getCorrespondingCloser(src.charAt(src.length() - 1));
+        src = src.concat(String.valueOf(closer));
         errs.add(
-            new ScannerError(ERROR_TYPE.CORRUPTED, index + findIndex, currentCloser, expectedCloser)
+            new ScannerError(
+                ERROR_TYPE.INCOMPLETE,
+                index + src.length() - 1,
+                '\u0000',
+                closer
+            )
         );
+      } else {
+        var findIndex = m.start();
+        var currentCloser = m.group().charAt(0);
+        var expectedCloser = getCorrespondingCloser(src.charAt(findIndex - 1 ));
+        if (currentCloser != expectedCloser) {
+          corrupted++;
+          errs.add(
+              new ScannerError(ERROR_TYPE.CORRUPTED, index + findIndex, currentCloser, expectedCloser)
+          );
+        }
+        src = src.substring(0, findIndex - 1).concat(src.substring(findIndex + 1));
+        index += 2;
       }
-      src = src.substring(0, findIndex - 1).concat(src.substring(findIndex + 1));
-      index += 2;
     }
     return errs;
   }

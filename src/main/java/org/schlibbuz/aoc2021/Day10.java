@@ -5,6 +5,9 @@
  */
 package org.schlibbuz.aoc2021;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 import org.schlibbuz.aoc2021.day10.ERROR_TYPE;
 import org.schlibbuz.aoc2021.day10.Scanner;
 
@@ -30,7 +33,7 @@ public class Day10 extends Day {
       var scanner = new Scanner(code);
       var errs = scanner.validateChunk(code);
       if (errs.size() > 0 && errs.get(0).errType == ERROR_TYPE.CORRUPTED) {
-        score += Scanner.SCORE_MAP.get(errs.get(0).actual);
+        score += Scanner.PART1_SCORE_MAP.get(errs.get(0).actual);
       }
     }
     return score;
@@ -38,7 +41,21 @@ public class Day10 extends Day {
 
   @Override
   public long part2() {
-    return 0;
+    List<Long> scores = new ArrayList<>();
+    for (var code : data) {
+      var scanner = new Scanner(code);
+      var errs = scanner.validateChunk(code);
+      if (errs.size() > 0 && errs.get(0).errType == ERROR_TYPE.INCOMPLETE) {
+        long score = 0;
+        for ( var err : errs) {
+          score *= 5;
+          score += Scanner.PART2_SCORE_MAP.get(err.expected);
+        }
+        scores.add(score);
+      }
+    }
+    Collections.sort(scores);
+    return scores.get(scores.size() / 2);
   }
 
 }
