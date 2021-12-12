@@ -5,6 +5,7 @@
  */
 package org.schlibbuz.aoc2021;
 
+import org.schlibbuz.aoc2021.day10.ERROR_TYPE;
 import org.schlibbuz.aoc2021.day10.Scanner;
 
 /**
@@ -21,13 +22,19 @@ public class Day10 extends Day {
     super(runType);
   }
 
+
   @Override
   public long part1() {
     int score = 0;
     for (var code : data) {
       var scanner = new Scanner(code);
+      var errs = scanner.validateChunk(code);
+      if (errs.size() > 0 && errs.get(0).errType == ERROR_TYPE.CORRUPTED) {
+        System.out.println(code);
+        score += Scanner.SCORE_MAP.get(errs.get(0).actual);
+      }
     }
-    return 0;
+    return score;
   }
 
   @Override

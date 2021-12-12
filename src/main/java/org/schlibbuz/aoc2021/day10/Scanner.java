@@ -6,8 +6,13 @@
 package org.schlibbuz.aoc2021.day10;
 
 import java.util.ArrayList;
-import java.util.Arrays;
+
 import java.util.List;
+import java.util.Map;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 /**
  *
@@ -17,6 +22,13 @@ public final class Scanner {
 
   static final String OPENERS = "([{<";
   static final String CLOSERS = ")]}>";
+  static final Pattern CLOSER_PATTERN = Pattern.compile("[\\)|\\]|\\}|>]");
+  public static final Map<Character, Integer> SCORE_MAP = Stream.of(new Object[][] {
+     { ')',     3 },
+     { ']',    57 },
+     { '}',  1197 },
+     { '>', 25137 },
+ }).collect(Collectors.toUnmodifiableMap(data -> (char) data[0], data -> (Integer) data[1]));
   final String code;
   public final List<String> chunks;
 
@@ -40,6 +52,10 @@ public final class Scanner {
         if (i == code.length() - 1) break; //last char
         chunkStart = i + 1;
         chunkOpener = code.charAt(i + 1);
+        if (!OPENERS.contains(String.valueOf(chunkOpener))) {
+          list.add(code.substring(chunkStart));
+          break;
+        }
         chunkCloser = getCorrespondingCloser(chunkOpener);
       }
     }
@@ -50,9 +66,31 @@ public final class Scanner {
     return CLOSERS.charAt(OPENERS.indexOf(opener));
   }
 
-  public int validateChunk(String chunk) {
-    Arrays.asList(chunk).forEach(System.out::print);
-    System.out.println("");
-    return 0;
+  public boolean isCodeCorrupted() {
+    return true;
+  }
+
+  public List<ScannerError> validateChunk(final String chunk) {
+    List<ScannerError> errs = new ArrayList<>();
+    var src = String.copyValueOf(chunk.toCharArray());
+    int index = 0;
+    while (src.length() > errs.size()) {
+      Matcher m = CLOSER_PATTERN.matcher(src);
+      if (!m.find()) {
+        errs.add(new ScannerError(ERROR_TYPE.INCOMPLETE, -1, '\u0000', '\u0000'));
+        return errs;
+      }
+      var findIndex = m.start();
+      var currentCloser = m.group().charAt(0);
+      var expectedCloser = getCorrespondingCloser(src.charAt(findIndex - 1 ));
+      if (currentCloser != expectedCloser) {
+        errs.add(
+            new ScannerError(ERROR_TYPE.CORRUPTED, index + findIndex, currentCloser, expectedCloser)
+        );
+      }
+      src = src.substring(0, findIndex - 1).concat(src.substring(findIndex + 1));
+      index += 2;
+    }
+    return errs;
   }
 }
