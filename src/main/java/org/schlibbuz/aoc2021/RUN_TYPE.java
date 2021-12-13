@@ -9,6 +9,6 @@ package org.schlibbuz.aoc2021;
  *
  * @author Stefan Frei <stefan.a.frei@gmail.com>
  */
-enum RUN_TYPE {
+public enum RUN_TYPE {
   TEST, PROD;
 }

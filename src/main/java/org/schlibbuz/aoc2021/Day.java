@@ -17,7 +17,7 @@ import org.apache.commons.io.FileUtils;
  */
 public abstract class Day implements FileLoader, DayStructure {
   final File file;
-  final List<String> data;
+  public final List<String> data;
   final static String DATA_PREFIX = "src/main/resources/";
   static final Charset UTF_8 = Charset.forName("UTF-8");
 

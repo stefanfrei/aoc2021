@@ -17,10 +17,9 @@ public class Runner {
    */
   public static void main(String[] args) {
     System.out.println(
-        new Day10(
+        new Day11(
             RUN_TYPE.PROD
-        )
-            .part2()
+        ).part2()
     );
   }
 
