@@ -73,7 +73,7 @@ public class OctopiTest {
     if (testType == TEST_TYPE.SHOULD_PASS) {
       assertEquals(inst.getEnergyLevels(), expected);
     } else {
-      assertNotEquals(true, true);
+      assertNotEquals(inst.getEnergyLevels(), expected);
     }
   }
 }

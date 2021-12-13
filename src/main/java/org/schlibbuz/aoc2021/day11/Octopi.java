@@ -9,6 +9,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 import java.util.stream.Stream;
 
 /**
@@ -113,9 +114,7 @@ public final class Octopi {
   }
 
   public void processSteps() {
-    for (int i = 0; i < maxSteps; i++) {
-      step();
-    }
+    IntStream.range(0, maxSteps).forEach(i -> step());
   }
 
   public int findFirstSimultanFlash() {
