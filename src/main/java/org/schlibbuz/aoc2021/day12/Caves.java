@@ -21,10 +21,12 @@ import java.util.stream.Collectors;
 public final class Caves {
 
   public Map<String, Cave> caves;
+  List<Path> paths;
 
 
   public Caves(List<String> data) {
     caves = initCaves(data);
+    paths = new ArrayList<>();
   }
 
   Map<String, Cave> initCaves(List<String> data) {
@@ -53,8 +55,8 @@ public final class Caves {
     return caves;
   }
 
-  String encodePath(List<String> path) {
-    return String.join(",", path);
+  String encodePath(Path path) {
+    return String.join(",", path.nodes);
   }
 
   Set<String> filterUndiscovered() {
@@ -64,7 +66,6 @@ public final class Caves {
         .collect(Collectors.toSet());
   }
 
-
   boolean isLegalMove(Cave caveToAdd, List<String> path) {
     //dont visit small caves more than once
     if (caveToAdd.caveType == CAVE_TYPE.SMALL) return !path.contains(caveToAdd.id);
@@ -73,12 +74,29 @@ public final class Caves {
     var size = path.size();
     if (size < 4) return true;
     return !(path.get(size - 2).equals(caveToAdd.id) && path.get(size - 1).equals(size - 3));
+  }
 
+  List<Path> getIncompletePaths(List<Path> paths) {
+    return paths.stream().filter(path -> !path.nodes.contains("end")).collect(Collectors.toList());
+  }
+
+  void divePath(Path path) {
+    var lastCave = caves.get(path.nodes.get(path.nodes.size() -1));
+    for (var nextOption : lastCave.adjacents) {
+      path.addNode(caves.get(nextOption));
+    }
   }
 
   public List<Path> findPaths() {
-    List<Path> paths = new ArrayList<>();
     paths.add(new Path(Arrays.asList(caves.get("start"))));
+    while (!(paths = getIncompletePaths(paths)).isEmpty()) {
+      var backup = List.copyOf(paths);
+      for (var path : paths) divePath(path);
+      if (paths.equals(backup)) {
+        System.out.println("no progress, will terminate");
+        break;
+      }
+    }
     return paths;
   }
 }
