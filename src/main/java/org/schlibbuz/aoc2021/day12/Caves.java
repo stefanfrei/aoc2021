@@ -55,9 +55,7 @@ public final class Caves {
     return caves;
   }
 
-  String encodePath(Path path) {
-    return String.join(",", path.nodes);
-  }
+  
 
   Set<String> filterUndiscovered() {
     return caves.keySet()
@@ -66,33 +64,33 @@ public final class Caves {
         .collect(Collectors.toSet());
   }
 
-  boolean isLegalMove(Cave caveToAdd, List<String> path) {
-    //dont visit small caves more than once
-    if (caveToAdd.caveType == CAVE_TYPE.SMALL) return !path.contains(caveToAdd.id);
-
-    //prevent pingponging between big caves (A,B,A,B), cant occur when list size < 4
-    var size = path.size();
-    if (size < 4) return true;
-    return !(path.get(size - 2).equals(caveToAdd.id) && path.get(size - 1).equals(size - 3));
-  }
-
   List<Path> getIncompletePaths(List<Path> paths) {
     return paths.stream().filter(path -> !path.nodes.contains("end")).collect(Collectors.toList());
   }
 
-  void divePath(Path path) {
+  List<Path> divePath(Path path) {
     var lastCave = caves.get(path.nodes.get(path.nodes.size() -1));
+    List<Path> newPaths = new ArrayList<>();
     for (var nextOption : lastCave.adjacents) {
-      path.addNode(caves.get(nextOption));
+      var newPath = new Path(path);
+      System.out.println(nextOption);
+      newPath.addNode(caves.get(nextOption));
+      newPaths.add(newPath);
     }
+    return newPaths;
   }
 
   public List<Path> findPaths() {
     paths.add(new Path(Arrays.asList(caves.get("start"))));
+    var iter = 0;
     while (!(paths = getIncompletePaths(paths)).isEmpty()) {
       var backup = List.copyOf(paths);
-      for (var path : paths) divePath(path);
-      if (paths.equals(backup)) {
+      List<Path> changes = new ArrayList<>();
+      for (var path : paths) changes.addAll(divePath(path));
+      paths.clear();
+      paths.addAll(changes);
+      paths.forEach(System.out::println);
+      if (paths.equals(backup) || ++iter == 3) {
         System.out.println("no progress, will terminate");
         break;
       }

@@ -38,6 +38,11 @@ public final class Path {
       if (node.caveType == CAVE_TYPE.SMALL) smallCavesVisited.add(id);
     }
   }
+  
+  public Path(Path path) {
+    nodes = new ArrayList<>(List.copyOf(path.nodes));
+    smallCavesVisited = new HashSet<>(Set.copyOf(path.smallCavesVisited));
+  }
 
   boolean isLegalMove(Cave newNode) {
     //dont visit small caves more than once
@@ -58,6 +63,10 @@ public final class Path {
     } else {
       System.out.println("illegal move for cave -> " + id);
     }
+  }
+  
+  String encode() {
+    return String.join(",", nodes);
   }
 
   @Override
