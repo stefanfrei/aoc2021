@@ -64,9 +64,6 @@ public final class Caves {
         .collect(Collectors.toSet());
   }
 
-  public List<List<String>> findPaths() {
-    return findPaths(caves.get("start"), new ArrayList<>());
-  }
 
   boolean isLegalMove(Cave caveToAdd, List<String> path) {
     //dont visit small caves more than once
@@ -79,27 +76,9 @@ public final class Caves {
 
   }
 
-  public List<List<String>> findPaths(Cave fromCave, List<String> path) {
-    System.out.println("from cave -> " + fromCave.id);
-    List<List<String>> paths = new ArrayList<>();
-    path.forEach(System.out::println);
-    for (var adjacent : fromCave.adjacents) {
-      System.out.println("adjacent -> " + adjacent);
-      if (!isLegalMove(caves.get(adjacent), path)) {
-        System.out.println("skipping -> " + adjacent);
-        continue;
-      } else {
-        System.out.println("adding1 " + fromCave.id);
-        path.add(fromCave.id);
-      }
-      if (!adjacent.equals("end")) {
-        findPaths(caves.get(adjacent), path);
-      } else if (isLegalMove(caves.get(adjacent), path)) {
-        System.out.println("adding2 " + adjacent);
-        path.add(adjacent);
-      }
-      paths.add(path);
-    }
+  public List<Path> findPaths() {
+    List<Path> paths = new ArrayList<>();
+    paths.add(new Path(Arrays.asList(caves.get("start"))));
     return paths;
   }
 }

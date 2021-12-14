@@ -189,7 +189,7 @@ public class CavesTest {
     };
   }
   @Test(dataProvider = "findPathsFixture")
-  public void findPathsTest(List<String> data, List<String> expected, TEST_TYPE testType) {
+  public void findPathsTest(List<String> data, List<List<String>> expected, TEST_TYPE testType) {
     var inst = new Caves(data);
     if (testType == TEST_TYPE.SHOULD_PASS) {
       assertEquals(inst.findPaths(), expected);
