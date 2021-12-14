@@ -55,46 +55,48 @@ public final class Caves {
     return caves;
   }
 
-  
-
-  Set<String> filterUndiscovered() {
-    return caves.keySet()
-        .stream()
-        .filter(caveId -> !caveId.equals("end") && caves.get(caveId).pathsToEnd.isEmpty())
-        .collect(Collectors.toSet());
-  }
-
   List<Path> getIncompletePaths(List<Path> paths) {
     return paths.stream().filter(path -> !path.nodes.contains("end")).collect(Collectors.toList());
+  }
+
+  List<Path> getFinishedPaths(List<Path> paths) {
+    return paths.stream().filter(path -> path.nodes.contains("end")).collect(Collectors.toList());
+  }
+
+  boolean isStarvedPath(Path path) {
+    var lastNodeId = path.nodes.get(path.nodes.size() - 1);
+    if (lastNodeId.equals("end")) return false;
+    return caves.get(lastNodeId).adjacents
+        .stream()
+        .map(caveId -> caves.get(caveId))
+        .allMatch(cave -> !path.isLegalMove(cave));
   }
 
   List<Path> divePath(Path path) {
     var lastCave = caves.get(path.nodes.get(path.nodes.size() -1));
     List<Path> newPaths = new ArrayList<>();
-    for (var nextOption : lastCave.adjacents) {
+    for (var nextOption : lastCave.adjacents.stream().filter(caveId -> path.isLegalMove(caves.get(caveId))).collect(Collectors.toSet())) {
       var newPath = new Path(path);
-      System.out.println(nextOption);
       newPath.addNode(caves.get(nextOption));
-      newPaths.add(newPath);
+      if (!isStarvedPath(newPath)) newPaths.add(newPath);
     }
     return newPaths;
   }
 
   public List<Path> findPaths() {
+    List<Path> completePaths = new ArrayList<>();
     paths.add(new Path(Arrays.asList(caves.get("start"))));
-    var iter = 0;
     while (!(paths = getIncompletePaths(paths)).isEmpty()) {
-      var backup = List.copyOf(paths);
       List<Path> changes = new ArrayList<>();
       for (var path : paths) changes.addAll(divePath(path));
-      paths.clear();
-      paths.addAll(changes);
-      paths.forEach(System.out::println);
-      if (paths.equals(backup) || ++iter == 3) {
+      if (paths.equals(changes)) {
         System.out.println("no progress, will terminate");
         break;
       }
+      paths.clear();
+      paths.addAll(changes);
+      completePaths.addAll(getFinishedPaths(paths));
     }
-    return paths;
+    return completePaths;
   }
 }
