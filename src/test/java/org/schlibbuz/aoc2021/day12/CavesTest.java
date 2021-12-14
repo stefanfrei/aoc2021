@@ -38,6 +38,7 @@ public class CavesTest {
                 "start,A,a,A,end"
             )
         ),
+        false,
         TEST_TYPE.SHOULD_PASS
       },
       {
@@ -55,6 +56,7 @@ public class CavesTest {
                 "start,b,end"
             )
         ),
+        false,
         TEST_TYPE.SHOULD_PASS
       },
       {
@@ -78,6 +80,7 @@ public class CavesTest {
                 "start,c,C,end"
             )
         ),
+        false,
         TEST_TYPE.SHOULD_PASS
       },
       {
@@ -106,21 +109,77 @@ public class CavesTest {
                 "start,A,c,A,b,A,end"
             )
         ),
+        false,
+        TEST_TYPE.SHOULD_PASS
+      },
+      {
+        new ArrayList<>(
+            Arrays.asList(
+                "start-A",
+                "start-b",
+                "A-c",
+                "A-b",
+                "b-d",
+                "A-end",
+                "b-end"
+            )
+        ),
+        new ArrayList<>(
+            Arrays.asList(
+                "start,A,end",
+                "start,b,end",
+                "start,A,b,end",
+                "start,b,A,end",
+                "start,A,b,A,end",
+                "start,A,c,A,end",
+                "start,b,A,b,end",
+                "start,b,d,b,end",
+                "start,A,b,A,b,end",
+                "start,A,b,d,b,end",
+                "start,A,c,A,b,end",
+                "start,b,A,b,A,end",
+                "start,b,A,c,A,end",
+                "start,b,d,b,A,end",
+                "start,A,b,A,b,A,end",
+                "start,A,b,A,c,A,end",
+                "start,A,b,d,b,A,end",
+                "start,A,c,A,b,A,end",
+                "start,A,c,A,c,A,end",
+                "start,b,A,c,A,b,end",
+                "start,A,b,A,c,A,b,end",
+                "start,A,c,A,b,A,b,end",
+                "start,A,c,A,b,d,b,end",
+                "start,A,c,A,c,A,b,end",
+                "start,b,A,b,A,c,A,end",
+                "start,b,A,c,A,b,A,end",
+                "start,b,A,c,A,c,A,end",
+                "start,b,d,b,A,c,A,end",
+                "start,A,b,A,b,A,c,A,end",
+                "start,A,b,A,c,A,b,A,end",
+                "start,A,b,A,c,A,c,A,end",
+                "start,A,b,d,b,A,c,A,end",
+                "start,A,c,A,b,A,b,A,end",
+                "start,A,c,A,b,A,c,A,end",
+                "start,A,c,A,b,d,b,A,end",
+                "start,A,c,A,c,A,b,A,end"
+            )
+        ),
+        true,
         TEST_TYPE.SHOULD_PASS
       },
     };
   }
   @Test(dataProvider = "findPathsFixture")
-  public void findPathsTest(List<String> data, List<String> expected, TEST_TYPE testType) {
+  public void findPathsTest(List<String> data, List<String> expected, boolean part2Rules, TEST_TYPE testType) {
     var inst = new Caves(data);
     if (testType == TEST_TYPE.SHOULD_PASS) {
       assertEquals(
-          inst.findPaths().stream().map(path -> path.encode()).collect(Collectors.toList()),
+          inst.findPaths(part2Rules).stream().map(path -> path.encode()).collect(Collectors.toList()),
           expected
       );
     } else {
       assertNotEquals(
-          inst.findPaths().stream().map(path -> path.encode()).collect(Collectors.toList()),
+          inst.findPaths(part2Rules).stream().map(path -> path.encode()).collect(Collectors.toList()),
           expected
       );
     }

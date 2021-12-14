@@ -19,7 +19,7 @@ public class Runner {
     System.out.println(
         new Day12(
             RUN_TYPE.PROD
-        ).part1()
+        ).part2()
     );
   }
 

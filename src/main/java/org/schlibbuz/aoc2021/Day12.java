@@ -29,7 +29,8 @@ public class Day12 extends Day {
 
   @Override
   public long part2() {
-    throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    var caves = new Caves(data);
+    return caves.findPaths(true).size();
   }
 
 }

@@ -84,8 +84,12 @@ public final class Caves {
   }
 
   public List<Path> findPaths() {
+    return findPaths(false);
+  }
+
+  public List<Path> findPaths(boolean part2Rules) {
     List<Path> completePaths = new ArrayList<>();
-    paths.add(new Path(Arrays.asList(caves.get("start"))));
+    paths.add(new Path(Arrays.asList(caves.get("start")), part2Rules));
     while (!(paths = getIncompletePaths(paths)).isEmpty()) {
       List<Path> changes = new ArrayList<>();
       for (var path : paths) changes.addAll(divePath(path));

@@ -23,6 +23,6 @@ public class Day12Test {
   @Test
   public void testPart2() {
     var inst = new Day12(RUN_TYPE.TEST);
-    assertEquals(inst.part2(), 195);
+    assertEquals(inst.part2(), 3509);
   }
 }

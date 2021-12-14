@@ -10,6 +10,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Objects;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 /**
  *
@@ -19,15 +20,19 @@ public final class Path {
 
   public final List<String> nodes;
   public final Set<String> smallCavesVisited;
+  final boolean part2Rules;
+  boolean jokerDrawn;
 
 
   public Path() {
-    this(new ArrayList<>());
+    this(new ArrayList<>(), false);
   }
 
-  public Path(List<Cave> nodes) {
+  public Path(List<Cave> nodes, boolean part2Rules) {
     this.nodes = new ArrayList<>();
     smallCavesVisited = new HashSet<>();
+    this.part2Rules = part2Rules;
+    jokerDrawn = false;
     for (var node : nodes) {
       var id = node.id;
       if (!isLegalMove(node)) {
@@ -38,33 +43,41 @@ public final class Path {
       if (node.caveType == CAVE_TYPE.SMALL) smallCavesVisited.add(id);
     }
   }
-  
+
   public Path(Path path) {
     nodes = new ArrayList<>(List.copyOf(path.nodes));
     smallCavesVisited = new HashSet<>(Set.copyOf(path.smallCavesVisited));
+    part2Rules = path.part2Rules;
+    jokerDrawn = path.jokerDrawn;
+  }
+
+  boolean part2Rule(Cave newNode) {
+    //PART 2 RULESET
+    if (jokerDrawn || newNode.id.equals("start") || newNode.id.equals("end")) {
+      return !nodes.contains(newNode.id);
+    } else {
+      return true;
+    }
   }
 
   boolean isLegalMove(Cave newNode) {
-    //dont visit small caves more than once
-    if (newNode.caveType == CAVE_TYPE.SMALL) return !nodes.contains(newNode.id);
-
-    //prevent pingponging between big caves (A,B,A,B), cant occur when list size < 4
-    var size = nodes.size();
-    if (size < 4) return true;
-    return !(nodes.get(size - 2).equals(newNode.id) && nodes.get(size - 1).equals(size - 3));
-
+    if (newNode.caveType == CAVE_TYPE.BIG) return true;
+    return part2Rules ? part2Rule(newNode) : !nodes.contains(newNode.id);
   }
 
   public void addNode(Cave newNode) {
     var id = newNode.id;
     if (isLegalMove(newNode)) {
       nodes.add(id);
-      if (newNode.caveType == CAVE_TYPE.SMALL) smallCavesVisited.add(id);
+      if (newNode.caveType == CAVE_TYPE.SMALL) {
+        var res = smallCavesVisited.add(id);
+        if (!res && !id.equals("start") && !id.equals("end")) jokerDrawn = true;
+      }
     } else {
       System.out.println("illegal move for cave -> " + id);
     }
   }
-  
+
   String encode() {
     return String.join(",", nodes);
   }
