@@ -20,7 +20,6 @@ public final class Cave {
   public final CAVE_TYPE caveType;
   public int visited;
   public Set<String> adjacents;
-  public Set<List<String>> pathsToEnd;
 
 
   public Cave(String id) {
@@ -28,7 +27,6 @@ public final class Cave {
     caveType = getCaveType();
     visited = 0;
     adjacents = new HashSet<>();
-    pathsToEnd = new HashSet<>();
   }
 
   CAVE_TYPE getCaveType() {
