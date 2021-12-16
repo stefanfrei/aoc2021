@@ -3,24 +3,20 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package org.schlibbuz.aoc2021;
-
+package org.schlibbuz.aoc2021.day14;
 
 /**
  *
  * @author Stefan Frei <stefan.a.frei@gmail.com>
  */
-public class Runner {
+public class Addition {
+  
+  final char val;
+  final int index;
 
-  /**
-   * @param args the command line arguments
-   */
-  public static void main(String[] args) {
-    System.out.println(
-        new Day14(
-            RUN_TYPE.PROD
-        ).part2()
-    );
+
+  public Addition(char val, int index) {
+    this.val = val;
+    this.index = index;
   }
-
 }
