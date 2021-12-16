@@ -5,6 +5,8 @@
  */
 package org.schlibbuz.aoc2021;
 
+import org.schlibbuz.aoc2021.day14.Polymer;
+
 /**
  *
  * @author Stefan Frei <stefan.a.frei@gmail.com>
@@ -21,12 +23,19 @@ public class Day14 extends Day {
 
   @Override
   public long part1() {
-    throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    var inst = new Polymer(data);
+    inst.times(10).expand();
+    return inst.getScore();
+//    return inst.getScore(
+//        inst.times(10).grow().toString()
+//    );
   }
 
   @Override
   public long part2() {
-    throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    var inst = new Polymer(data);
+    inst.times(40).expand();
+    return inst.getScore();
   }
 
 }

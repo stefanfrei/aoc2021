@@ -23,6 +23,6 @@ public class Day14Test {
   @Test
   public void part2Test() {
     var inst = new Day14(RUN_TYPE.TEST);
-    assertEquals(inst.part1(), 44);
+    assertEquals(inst.part2(), 2188189693529L);
   }
 }
