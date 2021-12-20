@@ -44,4 +44,40 @@ public class DecoderTest {
     var inst = new Decoder(data);
     assertEquals(inst.hexToBin(inst.src), exp);
   }
+
+  @DataProvider(name = "binToPacketsFix")
+  Object[][] binToPacketsFix() {
+    return new Object[][] {
+      {
+        "D2FE28",
+        "110100101111111000101",
+        List.of(
+            new LiteralPacket(VERSION.V6, 2021)
+        )
+      },
+//      {
+//        "38006F45291200",
+//        "00111000000000000110111101000101001010010001001000000000",
+//        List.of(
+//            new OperatorPacket(VERSION.V1, LENGTH_TYPE.BIT_15, 27),
+//            new LiteralPacket(VERSION.V6, 10),
+//            new LiteralPacket(VERSION.V2, 20)
+//        )
+//      },
+//      {
+//        "EE00D40C823060",
+//        "11101110000000001101010000001100100000100011000001100000",
+//        List.of(
+//            new OperatorPacket(VERSION.V2, LENGTH_TYPE.BIT_15, 27),
+//            new LiteralPacket(VERSION.V6, 10),
+//            new LiteralPacket(VERSION.V2, 20)
+//        )
+//      },
+    };
+  }
+  @Test(dataProvider = "binToPacketsFix")
+  public void binToPacketsTest(String hexData, String binData, List<IPacket> exp) {
+    var inst = new Decoder(hexData);
+    assertEquals(inst.binToPackets(binData), exp);
+  }
 }
